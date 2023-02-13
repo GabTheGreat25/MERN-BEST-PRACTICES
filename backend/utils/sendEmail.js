@@ -13,6 +13,13 @@ const nodemailer = require("nodemailer");
  * A message object is defined to hold the details of the email being sent. The `from` field for the email is set to include both a name and an email address, with the `to` field set to the email address of the recipient. The subject line and message body for the email are specified in the `subject` and `text` fields of the message object, respectively.
  *
  * The email is then sent by calling the `sendMail` method on the transporter object and passing in the message object.
+ *
+ * @example
+ * sendEmail({
+ *   email: 'recipient@example.com',
+ *   subject: 'Test Email',
+ *   message: 'Hello, this is a test email'
+ * });
  */
 
 const sendEmail = async (options) => {
@@ -45,6 +52,7 @@ const sendEmail = async (options) => {
 
   // Send the email using the transporter and the message object
   await transporter.sendMail(message);
+  console.log(transporter.options.host);
 };
 
 // Export the sendEmail function for use in other parts of the application

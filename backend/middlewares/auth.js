@@ -43,14 +43,20 @@ exports.isAuthenticatedUser = async (req, res, next) => {
   if (!token) {
     return res.status(400).json({
       success: false,
-      message: "Login first to access this resource",
+      message: "Access denied. Please log in first.",
     });
   }
 
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  req.user = await User.findById(decoded.id);
-
-  next();
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = await User.findById(decoded.id);
+    next();
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: "Your session has expired. Please log in again.",
+    });
+  }
 };
 
 /**
@@ -68,13 +74,12 @@ exports.isAuthenticatedUser = async (req, res, next) => {
  */
 exports.authorizeRoles = (...roles) => {
   return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
-      return res.status(400).json({
-        success: false,
-        message: `Role (${req.user.role}) is not allowed to access this resource`,
-      });
-    }
-
+    if (!roles.includes(req.user.role))
+      return next(
+        new ErrorHandler(
+          `Role ${req.user.role} is not allowed to access this resource`
+        )
+      );
     next();
   };
 };

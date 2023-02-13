@@ -25,7 +25,7 @@ router.route("/register").post(registerUser);
 router.route("/login").post(loginUser);
 
 // Route for logging out a user
-router.route("/logout").get(logout);
+router.route("/logout").delete(isAuthenticatedUser, logout);
 
 // Route for handling password reset request
 router.route("/password/forgot").post(forgotPassword);

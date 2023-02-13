@@ -1,19 +1,36 @@
 class APIFeatures {
   /**
-   * Constructor function that creates an object with a 'query' and 'queryStr' property.
-   *
-   * @param {Object} query - The query object.
-   * @param {String} queryStr - The query string.
+   * Constructor function that creates a new instance of the Query class, which includes a 'query' and 'queryStr' property.
+   * @param {Object} query - The MongoDB query object used to filter data.
+   * @param {String} queryStr - The query string used to search and filter data.
+   * @example
+   * const query = new Query(User.find(), req.query);
+   * creates a new instance of the Query class with a MongoDB query object and query string obtained from an HTTP request.
    */
   constructor(query, queryStr) {
     // Set the 'query' property to the provided query object.
     this.query = query;
-
     // Set the 'queryStr' property to the provided query string.
     this.queryStr = queryStr;
   }
 
-  // Search based on keyword
+  /**
+   * The `search` method is used to search a MongoDB collection based on a keyword.
+   * It checks if the `keyword` field exists in the `queryStr` object, and if so,
+   * creates a search object with a regular expression that matches the `keyword` in a
+   * case-insensitive manner. If the `keyword` field does not exist, an empty search
+   * object is created. The `find` method is then used on the `query` object to filter
+   * based on the created search object.
+   *
+   * @returns {object} The current instance of the `APIFeatures` class to allow method chaining.
+   *
+   * @example
+   * Search for products that contain the keyword "phone"
+   * const products = await new APIFeatures(Product.find(), { keyword: "phone" })
+   * .search()
+   * .query;
+   */
+
   search() {
     // Check if the `keyword` field exists in the `queryStr` object
     // If it does, create a search object with a regular expression that matches the `keyword` in a case-insensitive manner
@@ -36,7 +53,14 @@ class APIFeatures {
    * parses the modified string representation back into an object using `JSON.parse`,
    * and uses the `find` method on the `query` object to filter based on the parsed object.
    *
-   * @returns {object} The current object to allow chaining of methods.
+   * @example
+   * Create a new APIFeatures instance with a MongoDB query and query string
+   * const features = new APIFeatures(MongoDBQuery, { minPrice: 100, maxPrice: 200 });
+   *
+   * Add a filter for documents where the `price` field is greater than or equal to `100` and less than or equal to `200`
+   * features.filter();
+   *
+   * @returns {APIFeatures} The current object to allow chaining of methods.
    */
   filter() {
     const { keyword, limit, page, ...queryCopy } = this.queryStr;
@@ -57,6 +81,18 @@ class APIFeatures {
    *
    * @param {number} resPerPage - The number of results to display per page
    * @returns {object} - The current instance of the Query class to allow method chaining
+   *
+   * @example
+   * Example usage:
+   * const query = new Query(myCollection);
+   * query
+   *   .search()
+   *   .filter()
+   *   .pagination(10)
+   *   .execute((err, results) => {
+   *     if (err) throw err;
+   *     console.log(results);
+   *   });
    */
   pagination(resPerPage) {
     // Check if the `page` field exists in the `queryStr` object. If it does,

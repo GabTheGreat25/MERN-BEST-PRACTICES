@@ -25,6 +25,7 @@
     "dotenv": "^16.0.3",
     "errorhandler": "^1.5.1",
     "express": "^4.18.2",
+    "express-session": "^1.17.3",
     "fill-range": "^7.0.1",
     "glob-parent": "^5.1.2",
     "has-flag": "^3.0.0",
