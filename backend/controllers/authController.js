@@ -102,9 +102,10 @@ exports.forgotPassword = tryCatch(async (req, res, next) => {
   await user.save({ validateBeforeSave: false });
 
   // Compose the password reset URL and email message
-  const resetUrl = `${req.protocol}://${req.get(
-    "host"
-  )}/api/v1/password/reset/${resetToken}`;
+  // const resetUrl = `${req.protocol}://${req.get(
+  //   "host"
+  // )}/api/v1/password/reset/${resetToken}`;
+  const resetUrl = `password/reset/${resetToken}`;
   const message = `Your password reset token is: ${resetUrl}. If you didn't request this, please ignore it.`;
 
   // Send password reset email to the user
