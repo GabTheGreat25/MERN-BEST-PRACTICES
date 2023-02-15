@@ -7,7 +7,10 @@ const {
   newProduct,
   getSingleProduct,
   updateProduct,
-  deleteProduct,
+  softDeleteProduct,
+  restoreProduct,
+  hardDeleteProduct,
+  getProductsPagination,
 } = require("../controllers/productController");
 
 // Import authentication middlewares
@@ -19,6 +22,14 @@ router.get(
   isAuthenticatedUser,
   authorizeRoles("admin"),
   getProducts
+);
+
+//Pagination and Search
+router.get(
+  "/products/value",
+  isAuthenticatedUser,
+  authorizeRoles("admin"),
+  getProductsPagination
 );
 
 // Add a new product
@@ -40,12 +51,28 @@ router.put(
   updateProduct
 );
 
-// Delete a product by ID
+// Hard Delete a product by ID
 router.delete(
-  "/admin/product/:id",
+  "/admin/product/hardDelete/:id",
   isAuthenticatedUser,
   authorizeRoles("admin"),
-  deleteProduct
+  hardDeleteProduct
+);
+
+// Soft deleting a product by ID
+router.delete(
+  "/admin/product/softDelete/:id",
+  isAuthenticatedUser,
+  authorizeRoles("admin"),
+  softDeleteProduct
+);
+
+// Restoring a product by ID
+router.patch(
+  "/admin/product/restore/:id",
+  isAuthenticatedUser,
+  authorizeRoles("admin"),
+  restoreProduct
 );
 
 module.exports = router;

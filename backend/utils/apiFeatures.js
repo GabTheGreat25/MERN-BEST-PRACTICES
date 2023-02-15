@@ -98,8 +98,8 @@ class APIFeatures {
     // Check if the `page` field exists in the `queryStr` object. If it does,
     // convert it to a number using `Number`. If it doesn't, set the `currentPage`
     // to `1`. If the `page` field is a negative number, also set `currentPage` to `1`.
-    let currentPage = Number(this.queryStr.page) || 1;
-    if (currentPage < 0) currentPage = 1;
+    let currentPage = Number(this.queryStr.page);
+    if (!currentPage || currentPage < 1) currentPage = 1;
 
     // Calculate the number of documents to skip by multiplying the `resPerPage` argument
     // by `currentPage - 1`.

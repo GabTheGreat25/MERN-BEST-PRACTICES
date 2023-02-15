@@ -146,6 +146,33 @@ const productSchema = new mongoose.Schema({
     // The default value is set to the current date and time
     default: Date.now,
   },
+  isDeleted: {
+    type: Boolean,
+    default: false, // By default, new documents are not deleted
+  },
+  deletedAt: {
+    type: Date,
+    default: null, // By default, the deletedAt field is null
+  },
 });
+
+// Soft delete a document by setting the isDeleted field to true and the deletedAt field to the current date
+productSchema.methods.softDelete = function () {
+  this.isDeleted = true;
+  this.deletedAt = Date.now();
+  return this.save();
+};
+
+// Hard delete a document by calling the deleteOne method
+productSchema.methods.hardDelete = function () {
+  return this.deleteOne();
+};
+
+// Restore a deleted document by setting the isDeleted field to false and the deletedAt field to null
+productSchema.methods.restore = function () {
+  this.isDeleted = false;
+  this.deletedAt = null;
+  return this.save();
+};
 
 module.exports = mongoose.model("Product", productSchema);

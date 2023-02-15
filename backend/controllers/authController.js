@@ -61,13 +61,15 @@ exports.loginUser = tryCatch(async (req, res, next) => {
     isActive: true,
   });
 
+  // If the user has an active session, reject the login attempt
   if (existingSession)
     return next(new ErrorHandler("User already has an active session"));
 
-  // Create a new session
+  // Delete all old sessions for the user and create a new session
+  await Session.deleteMany({ user: user._id });
   await Session.create({ user: user._id });
 
-  // If passwords match and there is no active session, send JWT token
+  // Send JWT token
   sendToken(user, 200, res);
 });
 
@@ -159,7 +161,7 @@ exports.getUserProfile = tryCatch(async (req, res, next) => {
   const user = await User.findById(req.user.id);
 
   // Return success response with user data
-  return res.status(200).json({ success: true, user });
+  SuccessHandler(res, user);
 });
 
 exports.updatePassword = tryCatch(async (req, res, next) => {
@@ -195,9 +197,8 @@ exports.updateProfile = tryCatch(async (req, res, next) => {
   const id = req.user._id;
 
   // Check if the provided ID is a valid MongoDB ObjectID
-  if (!mongoose.Types.ObjectId.isValid(id)) {
+  if (!mongoose.Types.ObjectId.isValid(id))
     return next(new ErrorHandler("Invalid User ID"));
-  }
 
   // Create an object with the new user data
   const newUserData = {
@@ -212,10 +213,7 @@ exports.updateProfile = tryCatch(async (req, res, next) => {
   });
 
   // Return a success response
-  return res.status(200).json({
-    success: true,
-    user,
-  });
+  SuccessHandler(res, user);
 });
 
 exports.allUsers = tryCatch(async (req, res, next) => {
