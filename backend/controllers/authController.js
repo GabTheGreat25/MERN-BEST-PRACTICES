@@ -21,13 +21,12 @@ exports.registerUser = tryCatch(async (req, res, next) => {
   }
   // Destructure the incoming data
   const { name, email, password, role } = req.body;
-  // Hash the new password with a 12-round salt
-  const saltRounds = 12;
+
   // Create a new user
   const user = await User.create({
     name,
     email,
-    password: await bcrypt.hash(password, saltRounds),
+    password: await bcrypt.hash(password, Number(process.env.SALT_NUMBER)),
     role,
     avatar: {
       public_id: "avatars/johndoe",
@@ -142,9 +141,10 @@ exports.resetPassword = tryCatch(async (req, res, next) => {
   if (req.body.password !== req.body.confirmPassword)
     return next(new ErrorHandler("Password Mismatch"));
 
-  // Hash the new password with a 12-round salt
-  const saltRounds = 12;
-  const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+  const hashedPassword = await bcrypt.hash(
+    req.body.password,
+    Number(process.env.SALT_NUMBER)
+  );
 
   // Save new password, clear reset details
   user.password = hashedPassword;
