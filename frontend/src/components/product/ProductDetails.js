@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect } from "react";
 import { Carousel } from "react-bootstrap";
 import { useParams } from "react-router-dom";
+
 import Loader from "../layout/Loader";
 import MetaData from "../layout/Metadata";
 
@@ -11,6 +12,7 @@ import { getProductDetails, clearErrors } from "../../actions/productAction";
 const ProductDetails = () => {
   const dispatch = useDispatch();
   const alert = useAlert();
+
   let { id } = useParams();
 
   const { loading, error, product } = useSelector(
@@ -72,10 +74,13 @@ const ProductDetails = () => {
                 <input
                   type="number"
                   className="form-control count d-inline"
+                  value={"quantity"}
                   readOnly
                 />
 
-                <span className="btn btn-primary plus"> +</span>
+                <span className="btn btn-primary plus" onClick={"increaseQty"}>
+                  +
+                </span>
               </div>
               <button
                 type="button"
@@ -115,6 +120,10 @@ const ProductDetails = () => {
               >
                 Submit Your Review
               </button>
+
+              <div className="alert alert-danger mt-5" type="alert">
+                Login to post your review.
+              </div>
 
               <div className="row mt-2 mb-5">
                 <div className="rating w-50">

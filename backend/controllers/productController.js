@@ -7,17 +7,16 @@ const mongoose = require("mongoose");
 
 //get all products
 exports.getProducts = tryCatch(async (req, res, next) => {
-  // setTimeout(() => {}, 2000);
-
   // Find all products in the database and sort them by the createdAt field in descending order
   const products = await Product.find().sort({ createdAt: -1 });
 
-  res.status(200).json({
-    success: true,
-    productsCount: products.length,
-    products,
-  });
-
+  setTimeout(() => {
+    res.status(200).json({
+      success: true,
+      productsCount: products.length,
+      products,
+    });
+  }, 1000); //loading
   // Define the data object with the necessary values
   // const data = {
   //   productsCount: products.length,

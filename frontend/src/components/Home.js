@@ -8,17 +8,21 @@ import { useAlert } from "react-alert";
 
 const Home = () => {
   const dispatch = useDispatch();
+  const alert = useAlert();
   const { loading, products, error, productsCount } = useSelector(
     (state) => state.products
   );
 
-  const alert = useAlert();
+  //   useEffect( () => {
+  //     dispatch(getProducts())
+  //   }, [dispatch] );
 
   useEffect(() => {
-    dispatch(getProducts());
     if (error) {
-      alert.error(error);
+      alert.success("success");
+      return alert.error(error);
     }
+    dispatch(getProducts());
   }, [dispatch, alert, error]);
 
   return (
@@ -28,9 +32,7 @@ const Home = () => {
       ) : (
         <Fragment>
           <MetaData title={"Buy Best Products Online"} />
-          <h1 id="products_heading" className="text-center">
-            Latest Products
-          </h1>
+          <h1 id="products_heading">Latest Products</h1>
           <section id="products" className="container mt-5">
             <div className="row">
               {products &&

@@ -15,20 +15,19 @@ export const getProducts = () => async (dispatch) => {
     dispatch({
       type: ALL_PRODUCTS_REQUEST,
     });
-    const { data } = await axios.get("api/v1/products");
+    const { data } = await axios.get("/api/v1/products");
     console.log(data); // add this line to see if data is being returned
     if (!data || !data.products || !data.products.length) {
       throw new Error("No products found");
     }
     dispatch({
       type: ALL_PRODUCTS_SUCCESS,
-      payload: data.products,
+      payload: data,
     });
   } catch (error) {
-    console.log(error);
     dispatch({
       type: ALL_PRODUCTS_FAIL,
-      payload: error.response,
+      payload: error.response.data.message,
     });
   }
 };
@@ -38,12 +37,11 @@ export const clearErrors = () => async (dispatch) => {
     type: CLEAR_ERRORS,
   });
 };
-
 export const getProductDetails = (id) => async (dispatch) => {
   try {
     dispatch({ type: PRODUCT_DETAILS_REQUEST });
 
-    const { data } = await axios.get(`api/v1/product/${id}`);
+    const { data } = await axios.get(`/api/v1/product/${id}`);
 
     dispatch({
       type: PRODUCT_DETAILS_SUCCESS,
