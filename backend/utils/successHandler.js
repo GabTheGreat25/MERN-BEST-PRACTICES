@@ -1,9 +1,9 @@
-const successHandler = (res, message, data) => {
-  return res.status(200).json({
+const SuccessHandler = (res, message, data) => {
+  res.status(200).json({
     success: true,
     message: message,
-    data: data,
+    data: data.data,
   });
 };
 
-module.exports = successHandler;
+module.exports = SuccessHandler;

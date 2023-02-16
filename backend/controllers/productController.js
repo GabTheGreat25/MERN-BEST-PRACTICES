@@ -7,17 +7,24 @@ const mongoose = require("mongoose");
 
 //get all products
 exports.getProducts = tryCatch(async (req, res, next) => {
+  // setTimeout(() => {}, 2000);
+
   // Find all products in the database and sort them by the createdAt field in descending order
   const products = await Product.find().sort({ createdAt: -1 });
 
-  // Define the data object with the necessary values
-  const data = {
+  res.status(200).json({
+    success: true,
     productsCount: products.length,
     products,
-  };
+  });
 
+  // Define the data object with the necessary values
+  // const data = {
+  //   productsCount: products.length,
+  //   products,
+  // };
   // Call the SuccessHandler function with the data object
-  SuccessHandler(res, "Success", data);
+  // SuccessHandler(res, "Success", data);
 });
 
 //get single product
@@ -36,7 +43,11 @@ exports.getSingleProduct = tryCatch(async (req, res, next) => {
   if (!product) return next(new ErrorHandler("Not found"));
 
   // Return a JSON response with success status and the product information
-  SuccessHandler(res, product);
+  // SuccessHandler(res, product);
+  res.status(200).json({
+    success: true,
+    product,
+  });
 });
 
 //create new product
@@ -69,7 +80,11 @@ exports.newProduct = tryCatch(async (req, res, next) => {
   const product = await Product.create(req.body);
 
   // Return a JSON response with success status and the newly created product
-  SuccessHandler(res, product);
+  // SuccessHandler(res, product);
+  res.status(200).json({
+    success: true,
+    product,
+  });
 });
 
 //update a product
@@ -91,7 +106,11 @@ exports.updateProduct = tryCatch(async (req, res, next) => {
   if (!product) return next(new ErrorHandler("Not found"));
 
   // Return a success response with the updated product
-  SuccessHandler(res, product);
+  // SuccessHandler(res, product);
+  res.status(200).json({
+    success: true,
+    product,
+  });
 });
 
 // Soft delete a product by setting the isDeleted field to true and the deletedAt field to the current date
@@ -114,7 +133,11 @@ exports.softDeleteProduct = tryCatch(async (req, res, next) => {
   await product.softDelete();
 
   // Return a success message using the SuccessHandler function
-  SuccessHandler(res, "Product soft deleted");
+  // SuccessHandler(res, "Product soft deleted");
+  res.status(200).json({
+    success: true,
+    message: "Product soft deleted",
+  });
 });
 
 // Hard delete a product by calling the deleteOne method
@@ -137,7 +160,11 @@ exports.hardDeleteProduct = tryCatch(async (req, res, next) => {
   await product.hardDelete();
 
   // Return a success message using the SuccessHandler function
-  SuccessHandler(res, "Product hard deleted");
+  // SuccessHandler(res, "Product hard deleted");
+  res.status(200).json({
+    success: true,
+    message: "Product hard deleted",
+  });
 });
 
 // Restore a deleted product by setting the isDeleted field to false and the deletedAt field to null
@@ -160,7 +187,11 @@ exports.restoreProduct = tryCatch(async (req, res, next) => {
   await product.restore();
 
   // Return a success message using the SuccessHandler function
-  SuccessHandler(res, "Product restored");
+  // SuccessHandler(res, "Product restored");
+  res.status(200).json({
+    success: true,
+    message: "Product restored",
+  });
 });
 
 exports.getProductsPagination = tryCatch(async (req, res, next) => {
@@ -191,5 +222,10 @@ exports.getProductsPagination = tryCatch(async (req, res, next) => {
   };
 
   // Call the SuccessHandler function with the data object
-  SuccessHandler(res, "Fetch All The Products", data);
+  // SuccessHandler(res, "Fetch All The Products", data);
+  res.status(200).json({
+    success: true,
+    message: "Product soft deleted",
+    data,
+  });
 });

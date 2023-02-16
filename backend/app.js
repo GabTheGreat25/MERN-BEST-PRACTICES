@@ -3,8 +3,12 @@ const cookieParser = require("cookie-parser");
 const { errorJson, errorHandler } = require("./middlewares/error");
 const products = require("./routes/product");
 const auth = require("./routes/auth");
+const cors = require("cors");
 
 const app = express();
+
+// Allow cross-origin requests from any domain
+app.use(cors());
 
 // Middleware that parses incoming JSON requests
 app.use(express.json());

@@ -1,18 +1,23 @@
 import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import Home from "./components/Home";
 
-function App() {
+import ProductDetails from "./components/product/ProductDetails";
+
+const App = () => {
   return (
     <div className="App">
       <Header />
+      <Routes>
+        <Route path="/product/:id" component={ProductDetails} exact />;
+      </Routes>
       <Home />
       <Footer />
     </div>
   );
-}
-
-//get images from github repo
+};
 
 export default App;
