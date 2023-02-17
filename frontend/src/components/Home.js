@@ -1,10 +1,11 @@
-import { Fragment, useEffect } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getProducts } from "../actions/productAction";
 import Loader from "./layout/Loader";
 import MetaData from "./layout/Metadata";
 import Product from "./product/Product";
 import { useAlert } from "react-alert";
+import Pagination from "react-js-pagination";
 
 const Home = () => {
   // Define variables and functions with hooks
