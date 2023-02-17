@@ -10,20 +10,13 @@ exports.getProducts = tryCatch(async (req, res, next) => {
   // Find all products in the database and sort them by the createdAt field in descending order
   const products = await Product.find().sort({ createdAt: -1 });
 
+  // Call the SuccessHandler function with the data object
   setTimeout(() => {
-    res.status(200).json({
-      success: true,
+    SuccessHandler(res, "Successfully Get All Product", {
       productsCount: products.length,
       products,
     });
-  }, 1000); //loading
-  // Define the data object with the necessary values
-  // const data = {
-  //   productsCount: products.length,
-  //   products,
-  // };
-  // Call the SuccessHandler function with the data object
-  // SuccessHandler(res, "Success", data);
+  }, 1000); // 1 second load in the frontend
 });
 
 //get single product
@@ -42,11 +35,7 @@ exports.getSingleProduct = tryCatch(async (req, res, next) => {
   if (!product) return next(new ErrorHandler("Not found"));
 
   // Return a JSON response with success status and the product information
-  // SuccessHandler(res, product);
-  res.status(200).json({
-    success: true,
-    product,
-  });
+  SuccessHandler(res, "Successfully Get A Single Product", product);
 });
 
 //create new product
@@ -79,11 +68,7 @@ exports.newProduct = tryCatch(async (req, res, next) => {
   const product = await Product.create(req.body);
 
   // Return a JSON response with success status and the newly created product
-  // SuccessHandler(res, product);
-  res.status(200).json({
-    success: true,
-    product,
-  });
+  SuccessHandler(res, product);
 });
 
 //update a product
@@ -105,11 +90,7 @@ exports.updateProduct = tryCatch(async (req, res, next) => {
   if (!product) return next(new ErrorHandler("Not found"));
 
   // Return a success response with the updated product
-  // SuccessHandler(res, product);
-  res.status(200).json({
-    success: true,
-    product,
-  });
+  SuccessHandler(res, product);
 });
 
 // Soft delete a product by setting the isDeleted field to true and the deletedAt field to the current date

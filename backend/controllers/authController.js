@@ -35,11 +35,7 @@ exports.registerUser = tryCatch(async (req, res, next) => {
   });
 
   // Return success response
-  // SuccessHandler(res, user);
-  res.status(200).json({
-    success: true,
-    user,
-  });
+  SuccessHandler(res, user);
 });
 
 exports.loginUser = tryCatch(async (req, res, next) => {
@@ -119,15 +115,11 @@ exports.forgotPassword = tryCatch(async (req, res, next) => {
     message,
   });
 
-  // Return success response if email was sent successfully
-  // SuccessHandler(
-  //   res,
-  //   `An email with password reset instructions has been sent to ${user.email}.`
-  // );
-  res.status(200).json({
-    success: true,
-    message: `An email with password reset instructions has been sent to ${user.email}.`,
-  });
+  //Return success response if email was sent successfully
+  SuccessHandler(
+    res,
+    `An email with password reset instructions has been sent to ${user.email}.`
+  );
 });
 
 exports.resetPassword = tryCatch(async (req, res, next) => {
@@ -170,11 +162,7 @@ exports.getUserProfile = tryCatch(async (req, res, next) => {
   const user = await User.findById(req.user.id);
 
   // Return success response with user data
-  // SuccessHandler(res, user);
-  res.status(200).json({
-    success: true,
-    user,
-  });
+  SuccessHandler(res, user);
 });
 
 exports.updatePassword = tryCatch(async (req, res, next) => {
@@ -226,11 +214,7 @@ exports.updateProfile = tryCatch(async (req, res, next) => {
   });
 
   // Return a success response
-  // SuccessHandler(res, user);
-  res.status(200).json({
-    success: true,
-    user,
-  });
+  SuccessHandler(res, user);
 });
 
 exports.allUsers = tryCatch(async (req, res, next) => {
@@ -238,11 +222,7 @@ exports.allUsers = tryCatch(async (req, res, next) => {
   const users = await User.find().sort({ createdAt: -1 });
 
   // Return a success response with all the users
-  // SuccessHandler(res, users);
-  res.status(200).json({
-    success: true,
-    user,
-  });
+  SuccessHandler(res, users);
 });
 
 exports.getUserDetails = tryCatch(async (req, res, next) => {
@@ -255,11 +235,7 @@ exports.getUserDetails = tryCatch(async (req, res, next) => {
 
   const user = await User.findById(id);
 
-  // SuccessHandler(res, user);
-  res.status(200).json({
-    success: true,
-    user,
-  });
+  SuccessHandler(res, user);
 });
 
 exports.updateUser = tryCatch(async (req, res, next) => {
@@ -281,11 +257,7 @@ exports.updateUser = tryCatch(async (req, res, next) => {
     runValidators: true,
   });
 
-  // SuccessHandler(res, user);
-  res.status(200).json({
-    success: true,
-    user,
-  });
+  SuccessHandler(res, user);
 });
 
 exports.deleteUser = tryCatch(async (req, res, next) => {
@@ -302,11 +274,7 @@ exports.deleteUser = tryCatch(async (req, res, next) => {
   // Delete all past sessions of the user
   await Session.deleteMany({ userId: id });
 
-  // SuccessHandler(res, "User and their past sessions deleted");
-  res.status(200).json({
-    success: true,
-    message: "User and their past sessions deleted",
-  });
+  SuccessHandler(res, "User and their past sessions deleted");
 });
 
 // Remove avatar from cloudinary

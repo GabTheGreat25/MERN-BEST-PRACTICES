@@ -1,44 +1,44 @@
-import React, { Fragment, useState, useEffect } from "react";
-import MetaData from "./layout/Metadata";
-import Product from "./product/Product";
+import { Fragment, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getProducts } from "../actions/productAction";
 import Loader from "./layout/Loader";
+import MetaData from "./layout/Metadata";
+import Product from "./product/Product";
 import { useAlert } from "react-alert";
 
 const Home = () => {
-  const dispatch = useDispatch();
-  const alert = useAlert();
-  const { loading, products, error, productsCount } = useSelector(
-    (state) => state.products
-  );
+  // Define variables and functions with hooks
+  const dispatch = useDispatch(); // Get the dispatch function from the redux store
+  const { loading, products, error } = useSelector((state) => state.products); // Get products, loading state, and error from the redux store
+  const alert = useAlert(); // Get the alert function from the react-alert library
 
-  //   useEffect( () => {
-  //     dispatch(getProducts())
-  //   }, [dispatch] );
-
+  // Call the dispatch function to get products and handle errors
   useEffect(() => {
-    if (error) {
-      alert.success("success");
-      return alert.error(error);
-    }
-    dispatch(getProducts());
+    dispatch(getProducts()); // Dispatch an action to get products
+    if (error) alert.error(error); // Show an error alert if there is an error
   }, [dispatch, alert, error]);
 
+  // Render the home page with products, metadata, and loading indicator
   return (
     <Fragment>
-      {loading ? (
+      {loading ? ( // Show a loading indicator if the products are being loaded
         <Loader />
       ) : (
         <Fragment>
-          <MetaData title={"Buy Best Products Online"} />
-          <h1 id="products_heading">Latest Products</h1>
-          <section id="products" className="container mt-5">
+          <MetaData title="Buy Best Products Online" />{" "}
+          {/* Set metadata for the
+          page */}
+          <h1 className="text-center" id="products_heading">
+            Latest Products
+          </h1>
+          <section className="container mt-5" id="products">
             <div className="row">
-              {products &&
-                products.map((product) => (
-                  <Product key={product._id} product={product} />
-                ))}
+              {products && // Check if there are products to display
+                products.map(
+                  (
+                    product // Map through the products and display them
+                  ) => <Product key={product._id} product={product} />
+                )}
             </div>
           </section>
         </Fragment>
