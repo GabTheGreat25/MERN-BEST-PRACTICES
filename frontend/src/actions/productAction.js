@@ -10,27 +10,31 @@ import {
   CLEAR_ERRORS,
 } from "../constants/productConstants";
 
-export const getProducts = () => async (dispatch) => {
-  try {
-    dispatch({
-      type: ALL_PRODUCTS_REQUEST,
-    });
-    const { data } = await axios.get("/api/v1/products");
-    console.log(data); // add this line to see if data is being returned
-    if (!data || !data.products || !data.products.length) {
-      throw new Error("No products found");
+export const getProducts =
+  (keyword = "", currentPage = 1, price, category) =>
+  async (dispatch) => {
+    try {
+      dispatch({
+        type: ALL_PRODUCTS_REQUEST,
+      });
+
+      // const { data } = await axios.get(`/api/v1/products?keyword=${keyword}&page=${currentPage}`)
+
+      let link = `/api/v1/products?keyword=${keyword}&price[lte]=${price[1]}&price[gte]=${price[0]}&category=${category}&page=${currentPage}`;
+
+      const { data } = await axios.get(link);
+
+      dispatch({
+        type: ALL_PRODUCTS_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: ALL_PRODUCTS_FAIL,
+        payload: error.response.data.message,
+      });
     }
-    dispatch({
-      type: ALL_PRODUCTS_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: ALL_PRODUCTS_FAIL,
-      payload: error.response.data.message,
-    });
-  }
-};
+  };
 
 export const clearErrors = () => async (dispatch) => {
   dispatch({

@@ -7,23 +7,35 @@ const mongoose = require("mongoose");
 
 //get all products
 exports.getProducts = tryCatch(async (req, res, next) => {
-  // Find all products in the database and sort them by the createdAt field in descending order
-  const products = await Product.find().sort({ createdAt: -1 });
+  const resPerPage = 4;
 
-  setTimeout(() => {
-    res.status(200).json({
-      success: true,
-      productsCount: products.length,
-      products,
-    });
-  }, 1000); //loading
-  // Define the data object with the necessary values
-  // const data = {
-  //   productsCount: products.length,
-  //   products,
-  // };
-  // Call the SuccessHandler function with the data object
-  // SuccessHandler(res, "Success", data);
+  const productsCount = await Product.countDocuments();
+
+  // console.log(productsCount,req.query,Product.find())
+
+  // console.log(Product.find())
+
+  const apiFeatures = new APIFeatures(Product.find(), req.query)
+    .search()
+    .filter();
+
+  // const products = await Product.find();
+
+  apiFeatures.pagination(resPerPage);
+
+  const products = await apiFeatures.query;
+  let filteredProductsCount = products.length;
+
+  // console.log(products)
+
+  res.status(200).json({
+    success: true,
+    count: products.length,
+    productsCount,
+    products,
+    filteredProductsCount,
+    resPerPage,
+  });
 });
 
 //get single product
@@ -216,7 +228,8 @@ exports.getProductsPagination = tryCatch(async (req, res, next) => {
     currentPage,
     totalPages: Math.ceil(productsCount / resPerPage),
     productsCount,
-    productsLength: products.length,
+    filteredProductsCount: products.length,
+    resPerPage,
     products,
   };
 
