@@ -24,14 +24,6 @@ router.get(
   getProducts
 );
 
-//Pagination and Search
-router.get(
-  "/products/value",
-  isAuthenticatedUser,
-  authorizeRoles("admin"),
-  getProductsPagination
-);
-
 // Add a new product
 router.post(
   "/admin/product/new",

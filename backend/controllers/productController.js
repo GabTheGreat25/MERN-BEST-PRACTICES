@@ -7,15 +7,36 @@ const mongoose = require("mongoose");
 
 //get all products
 exports.getProducts = tryCatch(async (req, res, next) => {
-  // Find all products in the database and sort them by the createdAt field in descending order
-  const products = await Product.find().sort({ createdAt: -1 });
+  // Define the number of results to display per page
+  const resPerPage = 4;
+
+  // Get the current page from the query parameters or set it to 1 if not provided
+  const currentPage = Number(req.query.page) || 1;
+
+  // Use Promise.all to fetch products and productsCount in parallel
+  const [products, productsCount] = await Promise.all([
+    // Create an instance of the APIFeatures class
+    new APIFeatures(Product.find().sort({ createdAt: -1 }), req.query)
+      .search() // Apply search
+      .filter() // Apply filter
+      .pagination(resPerPage).query, // Apply pagination & Execute the query and return the results
+    // Count the total number of products
+    Product.countDocuments(),
+  ]);
+
+  // Define the data object with the necessary values
+  const data = {
+    currentPage,
+    totalPages: Math.ceil(productsCount / resPerPage),
+    productsCount,
+    filteredProductsCount: products.length,
+    resPerPage,
+    products,
+  };
 
   // Call the SuccessHandler function with the data object
   setTimeout(() => {
-    SuccessHandler(res, "Successfully Get All Product", {
-      productsCount: products.length,
-      products,
-    });
+    SuccessHandler(res, "Fetch All The Products", data);
   }, 1000); // 1 second load in the frontend
 });
 
@@ -171,41 +192,5 @@ exports.restoreProduct = tryCatch(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "Product restored",
-  });
-});
-
-exports.getProductsPagination = tryCatch(async (req, res, next) => {
-  // Define the number of results to display per page
-  const resPerPage = 4;
-
-  // Get the current page from the query parameters or set it to 1 if not provided
-  const currentPage = Number(req.query.page) || 1;
-
-  // Use Promise.all to fetch products and productsCount in parallel
-  const [products, productsCount] = await Promise.all([
-    // Create an instance of the APIFeatures class
-    new APIFeatures(Product.find(), req.query)
-      .search() // Apply search
-      .filter() // Apply filter
-      .pagination(resPerPage).query, // Apply pagination & Execute the query and return the results
-    // Count the total number of products
-    Product.countDocuments(),
-  ]);
-
-  // Define the data object with the necessary values
-  const data = {
-    currentPage,
-    totalPages: Math.ceil(productsCount / resPerPage),
-    productsCount,
-    productsLength: products.length,
-    products,
-  };
-
-  // Call the SuccessHandler function with the data object
-  // SuccessHandler(res, "Fetch All The Products", data);
-  res.status(200).json({
-    success: true,
-    message: "Product soft deleted",
-    data,
   });
 });

@@ -4,14 +4,13 @@ import { Carousel } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import Loader from "../layout/Loader";
 import MetaData from "../layout/Metadata";
-import { useAlert } from "react-alert";
+import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { getProductDetails, clearErrors } from "../../actions/productAction";
 
 const ProductDetails = () => {
   // Creating variables to access dispatch function and alerts from react-alert
   const dispatch = useDispatch();
-  const alert = useAlert();
 
   // Getting the id parameter from the URL
   let { id } = useParams();
@@ -21,16 +20,21 @@ const ProductDetails = () => {
     (state) => state.productDetails
   );
 
+  const notify = (error = "test") =>
+    toast.error(error, {
+      position: toast.POSITION.TOP_LEFT,
+    });
+
   // Using useEffect to call getProductDetails action when component mounts or id changes
   useEffect(() => {
     dispatch(getProductDetails(id)); // Dispatching getProductDetails action with the id parameter
 
     // If there's an error, show an alert and dispatch clearErrors action
     if (error) {
-      alert.error(error); // Showing an error alert
+      notify(error); // Showing an error alert
       dispatch(clearErrors()); // Dispatching clearErrors action to clear errors from the redux store
     }
-  }, [dispatch, alert, error, id]);
+  }, [dispatch, error, id]);
 
   // Rendering the product details on the page
   return (
@@ -203,7 +207,7 @@ const ProductDetails = () => {
                             data-dismiss="modal" // add data attribute to dismiss the modal when clicked
                             aria-label="Close"
                           >
-                            Submit // set the button text to "Submit"
+                            Submit
                           </button>
                         </div>
                       </div>

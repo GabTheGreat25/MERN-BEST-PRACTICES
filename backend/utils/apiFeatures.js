@@ -30,18 +30,22 @@ class APIFeatures {
    * .search()
    * .query;
    */
-
   search() {
-    // Check if the `keyword` field exists in the `queryStr` object
-    // If it does, create a search object with a regular expression that matches the `keyword` in a case-insensitive manner
-    // If it doesn't, create an empty search object
-    // Use the `find` method on the `query` object to search based on the created search object
-    this.query = this.query.find(
-      this.queryStr.keyword
-        ? { name: { $regex: this.queryStr.keyword, $options: "i" } } // i = case-insensitive
-        : {}
-    );
-    // Return `this` to allow chaining of methods
+    const keyword = this.queryStr.keyword
+      ? { name: { $regex: this.queryStr.keyword, $options: "i" } }
+      : {};
+
+    let category = {};
+    if (this.queryStr.category) {
+      category = {
+        category: { $regex: this.queryStr.category, $options: "i" },
+      };
+    }
+
+    const search = { ...keyword, ...category };
+
+    this.query = this.query.find(search);
+
     return this;
   }
 
